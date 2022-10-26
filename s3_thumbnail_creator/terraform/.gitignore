@@ -1,0 +1,5 @@
+# Only demo, don't want to persist terraform files
+.terraform/
+.terraform*
+*.tfvars
+*.tfstate*
