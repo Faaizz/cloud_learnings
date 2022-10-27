@@ -1,0 +1,131 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  ThumbnailCreatorImageURI:
+    Type: String
+    Description: Thumbnail Creator Image URI
+Resources:
+  SourceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: 
+        'Fn::Transform':
+          Name: RandomBucketNameMacro
+          Parameters:
+            Prefix: s3-random-source-thumbnail-bucket
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: 's3:ObjectCreated:*'
+            Function: !GetAtt
+              - ThumbnailCreationLambda
+              - Arn
+    DependsOn: ThumbnailCreationLambdaPermission
+  DestinationBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: 
+        'Fn::Transform':
+          Name: RandomBucketNameMacro
+          Parameters:
+            Prefix: s3-random-destination-thumbnail-bucket
+  ThumbnailCreationLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'sts:AssumeRole'
+            Principal:
+              Service:
+                - 'lambda.amazonaws.com'
+      Policies:
+        - PolicyName: RandomBucketNameLambdaPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Sid: CloudWatchLogsAccess
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: 'arn:aws:logs:*:*:*'
+              - Effect: Allow
+                Sid: S3SourceBucketAccess
+                Action:
+                  - 's3:GetObject'
+                Resource: !Join
+                  - '/'
+                  - - !Join
+                      - ':'
+                      - - 'arn'
+                        - 'aws'
+                        - 's3'
+                        - ''
+                        - ''
+                        - 'Fn::Transform':
+                            Name: RandomBucketNameMacro
+                            Parameters:
+                              Prefix: s3-random-source-thumbnail-bucket
+                    - '*'
+              - Effect: Allow
+                Sid: S3DestinationBucketAccess
+                Action:
+                  - 's3:PutObject'
+                Resource: !Join
+                  - '/'
+                  - - !Join
+                      - ':'
+                      - - 'arn'
+                        - 'aws'
+                        - 's3'
+                        - ''
+                        - ''
+                        - 'Fn::Transform':
+                            Name: RandomBucketNameMacro
+                            Parameters:
+                              Prefix: s3-random-destination-thumbnail-bucket
+                    - '*'
+  ThumbnailCreationLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: ThumbnailCreationLambda
+      Role: !GetAtt
+        - ThumbnailCreationLambdaRole
+        - Arn
+      Environment:
+        Variables:
+          DEST_BUCKET: 
+            'Fn::Transform':
+              Name: RandomBucketNameMacro
+              Parameters:
+                Prefix: s3-random-destination-thumbnail-bucket
+      Code:
+        ImageUri: !Ref ThumbnailCreatorImageURI
+      PackageType: 'Image'
+  ThumbnailCreationLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: ThumbnailCreationLambda
+      Principal:  's3.amazonaws.com'
+      SourceArn: !Join
+        - ':'
+        - - 'arn'
+          - 'aws'
+          - 's3'
+          - ''
+          - ''
+          - 'Fn::Transform':
+              Name: RandomBucketNameMacro
+              Parameters:
+                Prefix: s3-random-source-thumbnail-bucket
+    DependsOn: ThumbnailCreationLambda
+Outputs:
+  SourceBucket:
+    Description: Bucket name
+    Value: !Ref SourceBucket
+  DestinationBucket:
+    Description: Bucket name
+    Value: !Ref DestinationBucket

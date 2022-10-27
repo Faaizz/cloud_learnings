@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Automatically generate image thumbnails and save them in destination bucket for images uploaded in source bucket
+Parameters:
+  MacroName:
+    Type: String
+    Default: RandomBucketNameMacro
+Resources:
+  RandomBucketNameLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'sts:AssumeRole'
+            Principal:
+              Service:
+                - 'lambda.amazonaws.com'
+      Policies:
+        - PolicyName: RandomBucketNameLambdaPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: 'arn:aws:logs:*:*:*'
+  RandomBucketNameLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Role: !GetAtt
+          - RandomBucketNameLambdaRole
+          - Arn
+      Runtime: python3.9
+      Description: Lambda function that generates random S3 bucket names
+      Code:
+        ZipFile: |
+          import random
+          def handler(event, context):
+            name_prefix = event['params']['Prefix']
+            random_bucket_name = '{}-{}'.format(name_prefix, random.randint(5000, 9000))
+            return {
+              'requestId': event['requestId'],
+              'status': 'success',
+              'fragment': random_bucket_name,
+            }
+      Handler: index.handler
+  RandomBucketNameMacro:
+    Type: AWS::CloudFormation::Macro
+    Properties:
+      Name: !Ref MacroName
+      Description: Generate random bucket name
+      # Gotcha ARN here, not function name
+      FunctionName: !GetAtt
+        - RandomBucketNameLambda
+        - Arn

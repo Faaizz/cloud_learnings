@@ -1,0 +1,96 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  GitHubRepoURL:
+    Type: String
+    Description: HTTPS Url to GitHub repository that holds the thumbnail creator lambda code
+    Default: 'https://github.com/Faaizz/s3_thumbnail_creator'
+  BuildName:
+    Type: String
+    Default: s3_thumbnail_creator_lambda_container_build
+  ImageTag:
+    Type: String
+    Default: latest
+Resources:
+  ThumbnailCreatorECRRepository:
+    Type: AWS::ECR::Repository
+  ThumbnailCreationBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'sts:AssumeRole'
+            Principal:
+              Service:
+                - 'codebuild.amazonaws.com'
+      Policies:
+        - PolicyName: RandomBucketNameLambdaPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Sid: CloudWatchLogsAccess
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: 'arn:aws:logs:*:*:*'
+              - Effect: Allow
+                Sid: ECRAccess
+                Action:
+                  - 'ecr:BatchCheckLayerAvailability'
+                  - 'ecr:CompleteLayerUpload'
+                  - 'ecr:GetAuthorizationToken'
+                  - 'ecr:InitiateLayerUpload'
+                  - 'ecr:PutImage'
+                  - 'ecr:UploadLayerPart'
+                Resource: '*'
+  ThumbnailCreationBuild:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Source:
+        Auth: 
+          Type: OAUTH
+        Location: 'https://github.com/Faaizz/s3_thumbnail_creator'
+        Type: GITHUB
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+          - Name: AWS_ACCOUNT_ID
+            Value: !Ref AWS::AccountId
+          # ECR Repo name
+          - Name: IMAGE_REPO_NAME
+            Value:  !Ref ThumbnailCreatorECRRepository
+          - Name: IMAGE_TAG
+            Value: !Ref ImageTag
+        PrivilegedMode: true
+        Type: LINUX_CONTAINER
+        Image: aws/codebuild/standard:4.0
+      Name: !Ref BuildName
+      ServiceRole: !GetAtt
+        - ThumbnailCreationBuildRole
+        - Arn
+Outputs:
+  ThumbnailCreatorImageURI:
+    Description: Repo ARN
+    Value: !Join
+        - '.'
+        - - !Ref AWS::AccountId
+          - dkr
+          - ecr
+          - !Ref AWS::Region
+          - amazonaws
+          - !Join
+            - '/'
+            - - com
+              - !Join
+                - ':'
+                - - !Ref ThumbnailCreatorECRRepository
+                  - !Ref ImageTag
+    
