@@ -7,6 +7,7 @@ from core import s3_actions
 from core import iam_actions
 from core import lambda_actions
 from core import ecr_actions
+from core import codebuild_actions
 
 if __name__ == '__main__':
   with open(cleanup_file_path) as cleanup_f:
@@ -20,7 +21,13 @@ if __name__ == '__main__':
   iam_actions.detach_policy_from_role(cleanup_data['thumbnail_role_name'], cleanup_data['thumbnail_policy_arn'])
   iam_actions.delete_role(cleanup_data['thumbnail_role_name'])
   iam_actions.delete_policy(cleanup_data['thumbnail_policy_arn'])
+  # codebuild
+  iam_actions.detach_policy_from_role(cleanup_data['codebuild_role_name'], cleanup_data['codebuild_policy_arn'])
+  iam_actions.delete_role(cleanup_data['codebuild_role_name'])
+  iam_actions.delete_policy(cleanup_data['codebuild_policy_arn'])
   # ECR
   ecr_actions.delete_repo(cleanup_data['ecr_repo_name'])
+  # codebuild
+  codebuild_actions.delete_project(cleanup_data['codebuild_project_name'])
 
   logger.info('finished cleanup')

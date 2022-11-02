@@ -1,12 +1,16 @@
 from core import session
-from core import uniform_tags
-from core import lambda_function_name
-from core import source_bucket_name
-from core import account_id
 
 lambda_client = session.client('lambda')
 
-def main(ecr_image_uri: str, role_arn: str, env_vars: dict):
+def main(
+    ecr_image_uri: str, 
+    role_arn: str, 
+    env_vars: dict,
+    uniform_tags: list[object],
+    lambda_function_name: str,
+    source_bucket_name: str,
+    account_id: str,
+  ):
   """returns lambda function arn"""
   # Lambda takes only a single dict for Tags
   lambda_uniform_tags = {tag['Key']: tag['Value'] for tag in uniform_tags}
@@ -18,7 +22,6 @@ def main(ecr_image_uri: str, role_arn: str, env_vars: dict):
     Code={'ImageUri': ecr_image_uri},
     Publish=True,
     Role=role_arn,
-    Architectures=['arm64'],
     Environment={
       'Variables': env_vars,
     },

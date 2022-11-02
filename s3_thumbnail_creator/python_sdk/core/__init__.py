@@ -12,14 +12,8 @@ logger.setLevel(logging.INFO)
 __basefilepath__ = os.path.dirname(os.path.abspath(__file__) + "/")
 
 # Some Constants
-# Github Auth Info
-github_user = os.environ['GITHUB_USER']
-github_pat = os.environ['GITHUB_PAT']
-github_repo = os.environ['GITHUB_REPO']
 # Source code
-src_path = os.getcwd() + '/src'
-app_path = os.getcwd() + '/src/' + github_repo
-repo_url = 'https://{}:{}@github.com/{}/{}'.format(github_user, github_pat, github_user, github_repo)
+repo_url = 'https://github.com/Faaizz/s3_thumbnail_creator'
 
 # AWS
 uniform_tags = [{
@@ -34,10 +28,13 @@ thumbnail_role_name = 'thumbnail_role'
 lambda_function_name = 's3_thumbnail_creator'
 ecr_repo_name = 'my_repo'
 ecr_image_name = 's3_thumbnail_creator'
+codebuild_project_name = 's3_thumbnail_creator_project'
+codebuild_policy_name = 'codebuild_policy'
+codebuild_role_name = 'codebuild_role'
 
 
 # AWS Auth Info
-aws_region_name = os.environ['AWS_REGION']
+aws_region_name = os.environ['AWS_DEFAULT_REGION']
 aws_access_key_id = os.environ['AWS_ACCESS_KEY_ID']
 aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
 
