@@ -47,7 +47,8 @@ func main() {
 		"ECR Repository & CodeBuild Project to build & host thumbnail replication lambda container image",
 		fs,
 		map[string]string{
-			"BuildName": buildName,
+			"BuildName":     buildName,
+			"GitHubRepoURL": "https://github.com/Faaizz/s3_thumbnail_creator",
 		},
 	)
 	if err != nil {
