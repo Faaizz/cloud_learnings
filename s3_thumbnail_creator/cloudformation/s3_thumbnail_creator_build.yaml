@@ -51,8 +51,6 @@ Resources:
     Type: AWS::CodeBuild::Project
     Properties:
       Source:
-        Auth: 
-          Type: OAUTH
         Location: 'https://github.com/Faaizz/s3_thumbnail_creator'
         Type: GITHUB
       Artifacts:
