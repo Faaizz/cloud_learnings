@@ -2,8 +2,6 @@ resource "aws_lambda_function" "s3_thumbnail_creator_terraform" {
   function_name = local.lambda_function_name
   # Execution role
   role = aws_iam_role.create_thumbnail_role.arn
-  # I'm using an M1 macOS
-  architectures = ["arm64"]
   package_type  = "Image"
   image_uri     = local.ecr_image_uri
   publish       = true
@@ -16,7 +14,7 @@ resource "aws_lambda_function" "s3_thumbnail_creator_terraform" {
 
   tags = local.uniform_tags
 
-  depends_on = [null_resource.push_docker_image]
+  depends_on = [null_resource.trigger_build]
 }
 
 # Invoke permission for S3 notifications from source bucket
