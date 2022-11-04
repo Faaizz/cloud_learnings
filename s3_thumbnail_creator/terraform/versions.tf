@@ -8,10 +8,6 @@ terraform {
       source  = "hashicorp/random"
       version = "3.4.3"
     }
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "2.22.0"
-    }
   }
 
   required_version = "~> 1.0"
@@ -22,6 +18,3 @@ provider "aws" {
   access_key = var.aws_access_key_id
   secret_key = var.aws_secret_access_key
 }
-
-# Configure Docker
-provider "docker" {}
