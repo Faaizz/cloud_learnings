@@ -85,7 +85,7 @@ func RunBuild(name string) error {
 		if time.Since(sbT) > time.Minute*5 {
 			return errors.New("build timed out")
 		}
-		time.Sleep(5 * time.Second)
+		time.Sleep(15 * time.Second)
 	}
 
 	return nil

@@ -7,13 +7,13 @@ CTR=0
 
 for (( ; ; ))
 do
-	sleep 60
+	sleep 15
 	BUILD_STATUS=$(aws codebuild batch-get-builds --ids $BUILD_ID | jq -r '.builds[0].buildStatus')
 	if [[ "$BUILD_STATUS" = "SUCCEEDED"  ]]
 	then
 		break
 	fi
-	if [[ "$CTR" -gt "5" ]]
+	if [[ "$CTR" -gt "20" ]]
 	then
 		exit 1
 	fi
