@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/Faaizz/cloud_learnings/s3_thumbnail_creator/cloudformation/cb"
 	"github.com/Faaizz/cloud_learnings/s3_thumbnail_creator/cloudformation/cfn"
@@ -15,6 +16,9 @@ const buildTemplatePath = "s3_thumbnail_creator_build.yaml"
 const creatorTemplatePath = "s3_thumbnail_creator.yaml"
 
 func main() {
+	// time execution
+	st := time.Now()
+
 	// setup logging
 	loggerCore, err := zap.NewDevelopment()
 	if err != nil {
@@ -104,5 +108,6 @@ func main() {
 	}
 	logger.Infoln("created creator stack")
 
+	logger.Infof("execution took: %v", time.Since(st))
 	os.Exit(0)
 }

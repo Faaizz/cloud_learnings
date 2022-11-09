@@ -26,6 +26,9 @@ from core import logger
 
 
 def main():
+  # Time execution
+  start_time = time.time()
+
   # Create buckets
   s3_actions.create_buckets([source_bucket_name, destination_bucket_name])
 
@@ -92,3 +95,5 @@ def main():
   }
   with open(cleanup_file_path, 'w') as cleanup_f:
     json.dump(cleanup_data, cleanup_f)
+
+  logger.info('execution took: {} seconds'.format(time.time() - start_time))
