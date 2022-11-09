@@ -26,13 +26,16 @@ def delete_buckets(bucket_names: list[str]) -> None:
     res_data = s3_client.list_objects(
       Bucket=bucket_name,
     )
-    delete_list = [ {'Key': bucket_object['Key']} for bucket_object in res_data['Contents']]
-    # Delete bucket objects
-    s3_client.delete_objects(
-      Bucket=bucket_name,
-      Delete={
-        'Objects': delete_list,
-      }
-    )
+    try:
+      delete_list = [ {'Key': bucket_object['Key']} for bucket_object in res_data['Contents']]
+      # Delete bucket objects
+      s3_client.delete_objects(
+        Bucket=bucket_name,
+        Delete={
+          'Objects': delete_list,
+        }
+      )
+    except:
+      pass
     # Delete bucket
     s3_client.delete_bucket(Bucket=bucket_name)
