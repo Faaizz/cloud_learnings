@@ -349,29 +349,6 @@ The function logic is provided to the CloudFormation template in-line, hence, no
 It is worthy to note that CloudFormation macros must exist before they can be used. I.e., a stack must be created from the template that declares a macro before the macro can be used in other templates. You CANNOT declare and use a macro in the same template.
 
 
-### Roundup
-Each of the three implementations is set up as an automated deployment and can be run via a single command. All commands below assume the [source repository](https://github.com/Faaizz/cloud_learnings.git) has been cloned, and that the command is being run from the root directory.
-
-Terraform:
-```sh
-cd s3_thumbnail_creator/terraform
-terraform apply --auto-approve
-```
-
-CloudFormation:
-```sh
-cd s3_thumbnail_creator/cloudformation
-go run .
-```
-
-Python:
-```sh
-cd s3_thumbnail_creator/python_sdk
-python3 ./run.py
-```
-
-*All executions above assume that AWS credentials are properly set up via environment variables: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, & `AWS_DEFAULT_REGION`.*
-
 ## Cleanup
 
 *TL;DR*
@@ -385,6 +362,24 @@ For CloudFormation, deployed resources can be deleted by deleting the stack in w
 Cleaning up resources deployed in the Python SDK implementation required some extra efforts.
 The identifiers of deployed resources are tracked in a JSON file, which is then loaded into the cleanup script.
 For parent resources with existing child resources, the child resources are traversed and deleted.
+
+
+## Roundup
+Terraform was the most convenient to use in my opinion.
+The declarative syntax was straightforward and the cleanup was very easy.
+Also, the execution time averaged 152 seconds across 3 runs.
+In terms of comfort and ease-of-use, terraform was the best.
+
+The Python SDK implementation gave more insight into the underlying constructs of the AWS API.
+It executed slightly faster than terraform, with an average execution time of 146 seconds across 3 runs. 
+From a learning perspective, the Python SDK implementation gave more insight into the underlying constructs of the AWS API.
+
+I can't really make much of a a case for using CloudFormation except for its compactness (if written in YAML, to be honest, I think JSON is quite verbose).
+Like terraform, it uses a declarative syntax. But, I found terraform much more convenient (might be because I hadn't really used CloudFormation before now).
+The CloudFormation implementation executed a lot slower than the other two methods, yielding an average execution time of 438 seconds across 3 runs.
+
+In summary, the terraform implementation was the most usable, while the Python SDK provided the most learnings.
+
 
 ## References
 
