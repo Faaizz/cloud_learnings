@@ -372,9 +372,9 @@ In terms of comfort and ease-of-use, terraform was the best.
 
 The Python SDK implementation gave more insight into the underlying constructs of the AWS API.
 It executed slightly faster than terraform, with an average execution time of 146 seconds across 3 runs. 
-From a learning perspective, the Python SDK implementation gave more insight into the underlying constructs of the AWS API.
+From a learning perspective, the Python SDK rocks :-).
 
-I can't really make much of a a case for using CloudFormation except for its compactness (if written in YAML, to be honest, I think JSON is quite verbose).
+I can't really make much of a a case for using CloudFormation except for its compactness (if written in YAML, I think JSON is quite verbose :-/).
 Like terraform, it uses a declarative syntax. But, I found terraform much more convenient (might be because I hadn't really used CloudFormation before now).
 The CloudFormation implementation executed a lot slower than the other two methods, yielding an average execution time of 438 seconds across 3 runs.
 
