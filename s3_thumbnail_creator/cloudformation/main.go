@@ -6,6 +6,8 @@ import (
 
 	"github.com/Faaizz/cloud_learnings/s3_thumbnail_creator/cloudformation/cb"
 	"github.com/Faaizz/cloud_learnings/s3_thumbnail_creator/cloudformation/cfn"
+
+	"go.uber.org/zap"
 )
 
 const macroTemplatePath = "s3_thumbnail_creator_macro.yaml"
@@ -13,10 +15,19 @@ const buildTemplatePath = "s3_thumbnail_creator_build.yaml"
 const creatorTemplatePath = "s3_thumbnail_creator.yaml"
 
 func main() {
-	fmt.Println("creating macro stack...")
-	fb, err := os.ReadFile(macroTemplatePath)
+	// setup logging
+	loggerCore, err := zap.NewDevelopment()
 	if err != nil {
 		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer loggerCore.Sync()
+	logger := loggerCore.Sugar()
+
+	logger.Infoln("creating macro stack...")
+	fb, err := os.ReadFile(macroTemplatePath)
+	if err != nil {
+		logger.Error(err)
 		os.Exit(1)
 	}
 	fs := string(fb)
@@ -28,15 +39,15 @@ func main() {
 		map[string]string{},
 	)
 	if err != nil {
-		fmt.Println(err)
+		logger.Error(err)
 		os.Exit(1)
 	}
-	fmt.Println("created macro stack")
+	logger.Infoln("created macro stack")
 
-	fmt.Println("creating build stack...")
+	logger.Infoln("creating build stack...")
 	fb, err = os.ReadFile(buildTemplatePath)
 	if err != nil {
-		fmt.Println(err)
+		logger.Error(err)
 		os.Exit(1)
 	}
 	fs = string(fb)
@@ -52,23 +63,23 @@ func main() {
 		},
 	)
 	if err != nil {
-		fmt.Println(err)
+		logger.Error(err)
 		os.Exit(1)
 	}
-	fmt.Println("created build stack")
+	logger.Infoln("created build stack")
 
-	fmt.Println("running build...")
+	logger.Infoln("running build...")
 	err = cb.RunBuild(buildName)
 	if err != nil {
-		fmt.Println(err)
+		logger.Error(err)
 		os.Exit(1)
 	}
-	fmt.Println("built stack")
+	logger.Infoln("built stack")
 
-	fmt.Println("creating creator stack...")
+	logger.Infoln("creating creator stack...")
 	fb, err = os.ReadFile(creatorTemplatePath)
 	if err != nil {
-		fmt.Println(err)
+		logger.Error(err)
 		os.Exit(1)
 	}
 	fs = string(fb)
@@ -76,7 +87,7 @@ func main() {
 	// check for ThumbnailCreatorImageURI in build
 	thumbnailCreatorImageURI, ok := buildOut["ThumbnailCreatorImageURI"]
 	if !ok {
-		fmt.Println("'ThumbnailCreatorImageURI' not outputted from build stack")
+		logger.Infoln("'ThumbnailCreatorImageURI' not outputted from build stack")
 		os.Exit(1)
 	}
 	_, err = cfn.CreateStack(
@@ -88,10 +99,10 @@ func main() {
 		},
 	)
 	if err != nil {
-		fmt.Println(err)
+		logger.Error(err)
 		os.Exit(1)
 	}
-	fmt.Println("created creator stack")
+	logger.Infoln("created creator stack")
 
 	os.Exit(0)
 }
