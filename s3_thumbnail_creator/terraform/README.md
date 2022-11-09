@@ -14,7 +14,7 @@ EOF
 ```
 5. Start the deployment
     ```sh
-    terraform deploy --auto-approve
+    terraform apply --auto-approve
     ```
 
 ## Steps to cleanup
