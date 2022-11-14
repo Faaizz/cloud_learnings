@@ -383,6 +383,8 @@ In summary, the terraform implementation was the most usable, while the Python S
 
 ## References
 
+- [https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/26098284#overview](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/26098284#overview)
+
 ### Terraform
 - [https://registry.terraform.io/providers/hashicorp/aws/latest/docs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
 
