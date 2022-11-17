@@ -1,5 +1,7 @@
 # 3xImplementation: S3 Thumbnail Creator
 
+**Note: Architectures illustrated are for educational purposes ONLY. They do no necessarily follow best practices and are NOT suitable for production.**
+
 This is the first in a series of episodes that compares three different implementations of basic architectures in AWS. In this episode, implementations of an "S3 Thumbnail Creator" in Terraform, AWS CloudFormation, and AWS Python SDK (boto3) are weighed up.
 
 The source code for this episode can be found on GitHub: [https://github.com/Faaizz/cloud_learnings/tree/main/s3_thumbnail_creator](https://github.com/Faaizz/cloud_learnings/tree/main/s3_thumbnail_creator).
