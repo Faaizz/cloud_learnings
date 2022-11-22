@@ -6,8 +6,11 @@ This is the first in a series of episodes that compares three different implemen
 
 The source code for this episode can be found on GitHub: [https://github.com/Faaizz/cloud_learnings/tree/main/s3_thumbnail_creator](https://github.com/Faaizz/cloud_learnings/tree/main/s3_thumbnail_creator).
 
-## Architecture
+## Application
 The S3 Thumbnail Creator is a serverless application that automatically generates thumbnails of images uploaded in one S3 bucket (Source bucket) and saves them in another S3 bucket (Destination bucket).
+![application](./docs/app.gif)
+
+## Architecture
 A basic layout is shown below. The green arrows show the deployment flow, while the black arrows show the operation flow.
 ![architecture](./docs/architecture.png)
 
