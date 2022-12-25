@@ -58,7 +58,7 @@ resource "aws_amplify_branch" "main" {
     ]
 
     command = <<-EOF
-    ./run.sh
+    ./deploy_frontend.sh
     EOF
   }
 }
