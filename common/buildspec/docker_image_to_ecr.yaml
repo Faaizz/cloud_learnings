@@ -1,0 +1,30 @@
+# CodeBuild buildspec.yaml that:
+#   - Logs into an ECR repository
+#   - Builds a docker image (assumes Dockerfile is located in root of source repository)
+#   - Pushes the built image into the ECR repository
+
+# Variables
+# The following environmental variables are expected:
+#   - AWS_REGION: Region where ECR is located
+#   - AWS_ACCOUNT_ID
+#   - IMAGE_REPO_NAME: ECR repository name
+#   - IMAGE_TAG: Tag to apply to docker image
+
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+  build:
+    commands:
+      - echo Build started at `date`
+      - echo Building docker image
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo Build completed at `date`
+      - echo Pushing image to ECR...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
