@@ -15,6 +15,15 @@ resource "aws_ecs_task_definition" "backend" {
       image = local.ecs.task.container.image
       essential = true
       portMappings = local.ecs.task.container.port_mappings
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-create-group": "true"
+          "awslogs-group": "awslogs-websocket-chatapp"
+          "awslogs-region": "eu-central-1"
+          "awslogs-stream-prefix": "awslogs-websocket-chatapp"
+        }
+      }
       cpu = 512
       environment = [
         {

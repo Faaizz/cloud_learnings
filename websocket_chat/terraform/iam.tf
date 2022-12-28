@@ -24,6 +24,14 @@ resource "aws_iam_policy" "task" {
     Version = "2012-10-17"
     Statement = [
       {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+        ]
+        Resource = "arn:aws:logs:*:*:*"
+      },
+      {
         Sid = "ExecuteSendMessage"
         Effect = "Allow"
         Action = [
@@ -82,6 +90,15 @@ resource "aws_iam_policy" "task_exec" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+        ]
+        Resource = "arn:aws:logs:*:*:*"
+      },
       {
         Effect = "Allow"
         Action = [
