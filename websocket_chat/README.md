@@ -4,7 +4,21 @@
 
 ## Requirements
 - [ ] AWS account with programmatic access, i.e., `ACCESS_KEY_ID` and `SECRET_ACCESS_KEY`
-- [ ] GitHub account with the frontend application source repository cloned and a personal access token that provides access to the repository
+- [ ] GitHub account with the frontend and backend application source repositories cloned and a personal access token that provides access to the cloned repositories.
+
+## WebSocket Chat Application
+The WebSocket chat application developed here is a simplistic one.
+It allows isolated one-to-one communication between multiple users using the WebSocket protocol.  
+![architecture 1](./docs/app.gif)
+
+## Architecture
+![base architecture](./docs/architecture_base.png)
+The core application architecture consists of a backend deployment, API endpoints, and a frontend web application. The backend deployment is accessible via the API endpoints from the frontend web application. 
+
+The frontend web application and the API endpoints are deployed across all three implementations using the AWS Amplify and API Gateway services respectively.
+
+In the architecture diagrams presented in this article, green lines signify deployment flows, while blue lines indicate the path through which application execution follows.
+
 
 ## Implementation 1: Architecture
 ![architecture 1](./docs/architecture_1.png)
