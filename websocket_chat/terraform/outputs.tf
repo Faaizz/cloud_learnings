@@ -9,3 +9,7 @@ output "frontend_url" {
 output "backend_url" {
   value = "http://${aws_lb.ecs.dns_name}:${local.backend.port}"
 }
+
+output "ws_api_invoke_url" {
+  value = aws_apigatewayv2_stage.dev.invoke_url
+}

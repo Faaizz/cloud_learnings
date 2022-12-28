@@ -26,7 +26,7 @@ resource "aws_amplify_app" "chatapp_frontend_app" {
   EOF
 
   environment_variables = {
-    WEBSOCKET_URL = var.websocket_url
+    WEBSOCKET_URL = aws_apigatewayv2_stage.dev.invoke_url
   }
 
   # The default rewrites and redirects added by the Amplify Console.
@@ -38,9 +38,9 @@ resource "aws_amplify_app" "chatapp_frontend_app" {
 }
 
 resource "aws_amplify_branch" "main" {
+  # Adds webhooks on the GitHub repository and does not delete them on terraform destroy
   app_id      = aws_amplify_app.chatapp_frontend_app.id
   branch_name = "main"
-  enable_auto_build = true
 
   #  deploy frontend
   provisioner "local-exec" {

@@ -42,7 +42,7 @@ locals {
       name = "websocket-chat-application-backend-persistence"
     }
 
-    api_gateway = {
+    api = {
       name = "websocket-chat-application-backend-api"
     }
   }
