@@ -7,11 +7,3 @@ variable "aws_region" {
 
 # GitHub
 variable "github_access_token" {}
-variable "frontend_repository" {
-  default = "https://github.com/Faaizz/simple_websocket_chatapp_frontend.git"
-}
-
-# Application
-variable "websocket_url" {
-  default = "wss://wgqv74nka0.execute-api.eu-central-1.amazonaws.com/production"
-}

@@ -14,9 +14,16 @@ locals {
       names = ["172.16.100.0", "172.16.101.0"]
     }
   }
+
   ecr = {
     repo_name = "websocket-chat-application"
     image_name = "backend"
+  }
+
+  frontend = {
+    github = {
+      repo_url = "https://github.com/Faaizz/simple_websocket_chatapp_frontend.git"
+    }
   }
 
   backend = {

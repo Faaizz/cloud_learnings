@@ -1,6 +1,6 @@
 resource "aws_amplify_app" "chatapp_frontend_app" {
   name = "websocket_chatapp_frontend"
-  repository = var.frontend_repository
+  repository = local.frontend.github.repo_url
   access_token = var.github_access_token
 
   build_spec = <<-EOF
