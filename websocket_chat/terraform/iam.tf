@@ -28,8 +28,9 @@ resource "aws_iam_policy" "task" {
         Effect = "Allow"
         Action = [
           "execute-api:Invoke",
+          "execute-api:ManageConnections",
         ]
-        Resource = aws_apigatewayv2_api.main.arn
+        Resource = "${aws_apigatewayv2_stage.dev.execution_arn}/*"
       },
       {
         Sid = "DynamoDBTableAccess"

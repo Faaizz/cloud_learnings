@@ -21,7 +21,8 @@
 - [ ] `aws_api_gateway_account` resource is needed to configure API Gateway's `cloudwatch_role_arn`
 - [ ] `aws_apigatewayv2_stage.default_route_settings` holds default settings for all routes (not settings for the default route as stated in the docs: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_stage#default_route_settings)
 - [ ] `aws_amplify_branch` adds webhooks on the destination GitHub repository and does not destroy them on `terraform destroy`
-- [ ] Ensure that 
+- [ ] `aws_apigatewayv2_stage.invoke_url` gives the WebSocket URL to invoke the API. The HTTP URL needed for `@connections` API is not provided. Had to be formed by manipulating the returned wss:// URL.
+- [ ] The `/message` route requires the `@connections` API URL which is only available after creating the stage--hence, the deployment. To enable an automated deployment after adding the `/message` route, `aws_apigatewayv2_stage.dev.auto_deploy` is set `true`.
 ## Problems
 - [ ] Use stageVariables in aws_apigatewayv2_integration
 

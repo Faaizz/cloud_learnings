@@ -44,6 +44,43 @@ locals {
 
     api = {
       name = "websocket-chat-application-backend-api"
+
+      routes = {
+        connect = {
+          route_key = "$connect"
+          path = "connect"
+          request_templates = {
+            "$default" = <<-EOF
+            {
+              "connectionId": "$context.connectionId"
+            }
+            EOF
+          }
+        }
+        disconnect = {
+          route_key = "$disconnect"
+          path = "disconnect"
+          request_templates = {
+            "$default" = <<-EOF
+            {
+              "connectionId": "$context.connectionId"
+            }
+            EOF
+          }
+        }
+        username = {
+          route_key = "username"
+          path = "username"
+          request_templates = {
+            "$default" = <<-EOF
+            {
+              "connectionId": "$context.connectionId",
+              "username": $input.json('$.username')
+            }
+            EOF
+          }
+        }
+      }
     }
   }
 
